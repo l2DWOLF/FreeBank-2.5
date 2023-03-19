@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "BankClass.h"
+#include "InputTools.h"
 //This CPP file Header// 
 #include "BankAccountsClass.h"
 
@@ -14,11 +15,11 @@
 	bankAccounts::bankAccounts(std::string newName)
 	{
 		name = newName;
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-		std::cout << "Hello " << name << "! \nPlease enter a new password" << std::endl;
-		std::cin >> password;
-		std::cout << "Your password is: " << password << "\n";
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+		std::cout << "Hello " << name << "! \nPlease enter a new password\n";
+		getInputPass(password);
+		std::cout << "Your password is: " << password << std::endl;
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 		//Create Object file with name + pass//
 		std::ofstream file;
@@ -59,9 +60,9 @@
 	{
 		std::string tempass;
 		bool rslt{ 0 };
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-		std::cout << "enter password: " << std::endl;
-		std::cin >> tempass;
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+		std::cout << "enter password: \n";
+		getInputPass(tempass);
 
 		std::string filepass;
 		std::ifstream read("./ObjectsData/" + name + " login" + ".txt");
@@ -80,8 +81,7 @@
 	{
 		std::string tempass;
 
-		std::cout << "enter current password: " << std::endl;
-		std::cin >> tempass;
+		std::cout << "enter current password: \n";
 		std::string filepass;
 		std::ifstream read("./ObjectsData/" + name + " login" + ".txt");
 		getline(read, filepass);
@@ -89,8 +89,8 @@
 
 		if (tempass == filepass)
 		{
-			std::cout << "Enter New Password: " << std::endl;
-			std::cin >> password;
+			std::cout << "Enter New Password: \n";
+			getInputPass(password);
 
 			std::ofstream file;
 			file.open("./ObjectsData/" + name + " login" + ".txt");
@@ -98,7 +98,7 @@
 			file.close();
 		}
 		else
-			std::cout << "Wrong Password.." << std::endl;
+			std::cout << "Wrong Password..\n";
 	}
 
 
@@ -116,229 +116,307 @@
 	{
 		fees += 1;
 		checking -= 1;
-		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-		std::cout << "  Bank Account: " << name << std::endl;
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+		std::cout << "  Bank Account: " << name << "\n";
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 		std::cout << "Checking Account: $" << std::fixed << std::setprecision(2) << checking << std::endl;
 		std::cout << "Savings Account: $" << std::fixed << std::setprecision(2) << savings << std::endl;
 		std::cout << "Investment Account: $" << std::fixed << std::setprecision(2) << investment << std::endl;
 		std::cout << "Credit Card: $" << std::fixed << std::setprecision(2) << credit << std::endl;
 		std::cout << "Fees Total: $" << std::fixed << std::setprecision(2) << fees << std::endl;
-		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n";
 	}
 
 	void bankAccounts::deposit() // Deposit
 	{
-		std::string btn;
-	jumpDeposit:
-		std::cout << "[1] - Deposit to Checking Account [0.001% Fee]" << std::endl;
-		std::cout << "[2] - Deposit to Savings Account [0.005% Fee]" << std::endl;
-		std::cin >> btn;
-
-		if (btn == "1")
+		int btn{ 0 };
+		while (btn != 25)
 		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::cout << "Enter Amount to Deposit to your Checking Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * cdfee;
-			std::cout << "Please confirm" << std::endl;
-			std::cout << "Checking Account Deposit in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-			std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-			std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-			std::cin >> cnf;
+			std::cout << "[1] - Deposit to Checking Account\n";
+			std::cout << "[2] - Deposit to Savings Account\n";
+			std::cout << "[3] - Return to Previous Menu\n";
+			getInput(btn);
 
-			if (cnf == "Y" || cnf == "y")
+			if (btn == 1)
 			{
-				amt -= fee;
-				fees += fee;
-				checking += amt;
+				double amt{ 0 }, fee{ 0 };
+				bool valid{ 0 };
+				std::string cnf;
 
+				std::cout << "Enter Amount to Deposit to your Checking Account\n";
+				getInput(amt, valid);
+
+				if (valid)
+				{
+					fee = amt * cdfee;
+					std::cout << "Please confirm\n";
+					std::cout << "Checking Account Deposit in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+					std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+					std::cout << "Enter [Y] to continue or [N] to cancel\n";
+					getInput(cnf);
+
+					if (cnf == "Y" || cnf == "y")
+					{
+						amt -= fee;
+						fees += fee;
+						checking += amt;
+
+					}
+					else
+					{
+						std::cout << "Deposit Cancelled\n";
+						btn = 0;
+					}
+				}
+				else
+				{
+					btn = 1;
+				}
 			}
-			else
+			else if (btn == 2)
 			{
-				goto jumpDeposit;
+				double amt{ 0 }, fee{ 0 };
+				bool valid{ 0 };
+				std::string cnf;
+
+				std::cout << "Enter Amount to Deposit to your Savings Account\n";
+				getInput(amt, valid);
+
+				if (valid)
+				{
+					fee = amt * cdfee;
+					std::cout << "Please confirm\n";
+					std::cout << "Savings Account Deposit in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+					std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+					std::cout << "Enter [Y] to continue or [N] to cancel\n";
+					getInput(cnf);
+
+					if (cnf == "Y" || cnf == "y")
+					{
+						amt -= fee;
+						fees += fee;
+						savings += amt;
+
+					}
+					else
+					{
+						std::cout << "Deposit Cancelled\n";
+						btn = 0;
+					}
+				}
+				else
+				{
+					btn = 1;
+				}
 			}
+			else if (btn == 3)
+			{
+				btn = 25;
+			}
+			
 		}
-		else if (btn == "2")
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::cout << "Enter Amount to Deposit to your Savings Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * sdfee;
-			std::cout << "Please confirm" << std::endl;
-			std::cout << "Savings Account Deposit in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-			std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-			std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-			std::cin >> cnf;
-
-			if (cnf == "Y" || cnf == "y")
-			{
-				amt -= fee;
-				fees += fee;
-				savings += amt;
-			}
-			else
-			{
-				goto jumpDeposit;
-			}
-		}
-	}
+}	
 	// End Deposit //
 
 	void bankAccounts::withdrawal() // Withdrawal
 	{
-		std::string btn;
-	jumpwith:
-		std::cout << "[1] - Withdrawal from Checking Account [0.002% Fee]" << std::endl;
-		std::cout << "[2] - withdrawal from Savings Account [0.010% Fee]" << std::endl;
-		std::cin >> btn;
-
-		if (btn == "1")
+		int btn{ 0 };
+		while (btn != 25)
 		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::cout << "Enter Amount to withdrawal from your Checking Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * cwfee;
+			std::cout << "[1] - Withdrawal from Checking Account\n";
+			std::cout << "[2] - withdrawal from Savings Account\n";
+			std::cout << "[3] - Return to Previous Menu\n";
+			getInput(btn);
 
-			if (fee + amt <= checking)
+			if (btn == 1)
 			{
-				std::cout << "Please confirm" << std::endl;
-				std::cout << "Checking Account withdrawal in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-				std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-				std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-				std::cin >> cnf;
+				double amt{ 0 }, fee{ 0 };
+				std::string cnf;
+				bool valid; 
 
-				if (cnf == "Y" || cnf == "y")
+				std::cout << "Enter Amount to withdrawal from your Checking Account\n";
+				getInput(amt, valid);
+
+				if (valid)
 				{
-					amt += fee;
-					fees += fee;
-					checking -= amt;
+					fee = amt * cwfee;
+					if (fee + amt <= checking)
+					{
+						std::cout << "Please confirm\n";
+						std::cout << "Checking Account withdrawal in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+						std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+						std::cout << "Enter [Y] to continue or [N] to cancel\n";
+						getInput(cnf);
 
+						if (cnf == "Y" || cnf == "y")
+						{
+							amt += fee;
+							fees += fee;
+							checking -= amt;
+							std::cout << "Withdrawal Completed Successfully\n";
+
+						}
+						else
+						{
+							std::cout << "Withdrawal Cancelled\n"; 
+							btn = 0;
+						}
+					}
+					else
+					{
+						std::cout << "Insufficient Funds..\n";
+						btn = 0;
+					}
 				}
 				else
 				{
-					goto jumpwith;
+					btn = 0;
 				}
 			}
-			else
+			else if (btn == 2)
 			{
-				std::cout << "Insufficient Funds.." << std::endl;
-			}
-		}
-		else if (btn == "2")
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::cout << "Enter Amount to Withdrawal from your Savings Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * swfee;
+				double amt{ 0 }, fee{ 0 };
+				std::string cnf;
+				bool valid;
 
-			if (fee + amt <= savings)
-			{
-				std::cout << "Please confirm" << std::endl;
-				std::cout << "Savings Account Withdrawal in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-				std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-				std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-				std::cin >> cnf;
+				std::cout << "Enter Amount to withdrawal from your Savings Account\n";
+				getInput(amt, valid);
 
-				if (cnf == "Y" || cnf == "y")
+				if (valid)
 				{
-					amt += fee;
-					fees += fee;
-					savings -= amt;
-				}
-				else
-				{
-					goto jumpwith;
+					fee = amt * cwfee;
+
+					if (fee + amt <= savings)
+					{
+						std::cout << "Please confirm\n";
+						std::cout << "Savings Account withdrawal in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+						std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+						std::cout << "Enter [Y] to continue or [N] to cancel\n";
+						getInput(cnf);
+
+						if (cnf == "Y" || cnf == "y")
+						{
+							amt += fee;
+							fees += fee;
+							savings -= amt;
+							std::cout << "Withdrawal Completed Successfully\n";
+
+						}
+						else
+						{
+							std::cout << "Withdrawal Cancelled\n";
+							btn = 0;
+						}
+					}
+					else
+					{
+						std::cout << "Insufficient Funds..\n";
+						btn = 0;
+					}
 				}
 			}
-			else
+			else if (btn ==  3)
 			{
-				std::cout << "Insufficient Funds.." << std::endl;
+				btn = 25;
 			}
 		}
 	}
 	// End Withdrawal //
 
-	void bankAccounts::transfer() // Transfer
+	// Transfer // 
+	void bankAccounts::transfer()
 	{
-
-		std::string btn;
-	jumptransfer:
-		std::cout << "Select Tranfer type [fee is 0.001%] " << std::endl;
-		std::cout << "[1] - Checking to Savings" << std::endl;
-		std::cout << "[2] - Savings to Checking" << std::endl;
-		std::cin >> btn;
-
-		if (btn == "1")
+		bool valid{ 0 };
+		int btn{0};
+		while (btn != 25)
 		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
+			std::cout << "Select Tranfer type:\n";
+			std::cout << "[1] - Checking to Savings\n";
+			std::cout << "[2] - Savings to Checking\n";
+			std::cout << "[3] - Return to Previous Menu\n"; 
+			getInput(btn);
 
-			std::cout << "Enter Amount to Transfer from your Checking Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * transferfee;
-
-			if (amt + fee <= checking)
+			if (btn == 1)
 			{
-				std::cout << "Please confirm" << std::endl;
-				std::cout << "Checking Account Transfer in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-				std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-				std::cout << "This Amount will be Transferred to your Savings Account" << std::endl;
-				std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-				std::cin >> cnf;
+				double amt{ 0 }, fee{ 0 };
+				std::string cnf;
 
-				if (cnf == "Y" || cnf == "y")
-				{
-					checking -= amt + fee;
-					fees += fee;
-					savings += amt;
-				}
-				else
-				{
-					goto jumptransfer;
-				}
-			}
-			else
-			{
-				std::cout << "Insufficient Funds.." << std::endl;
-			}
-		}
-		else if (btn == "2")
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
+				std::cout << "Enter Amount to Transfer from your Checking Account\n";
+				getInput(amt, valid);
 
-			std::cout << "Enter Amount to Transfer from your Savings Account" << std::endl;
-			std::cin >> amt;
-			fee = amt * transferfee;
-
-			if (amt + fee <= savings)
-			{
-				std::cout << "Please confirm" << std::endl;
-				std::cout << "Savings Account Transfer in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
-				std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
-				std::cout << "This Amount will be Transferred to your Checking Account" << std::endl;
-				std::cout << "Enter [Y] to continue or [N] to cancel" << std::endl;
-				std::cin >> cnf;
-
-				if (cnf == "Y" || cnf == "y")
+				if (valid)
 				{
-					savings -= amt + fee;
-					fees += fee;
-					checking += amt;
-				}
-				else
-				{
-					goto jumptransfer;
+					fee = amt * transferfee;
+					if (amt + fee <= checking)
+					{
+						std::cout << "Please confirm\n";
+						std::cout << "Checking Account Transfer in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+						std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+						std::cout << amt - fee << " Amount will be Transferred to your Savings Account\n";
+						std::cout << "Enter [Y] to continue or [N] to cancel\n";
+						getInput(cnf);
+
+						if (cnf == "Y" || cnf == "y")
+						{
+							checking -= amt + fee;
+							fees += fee;
+							savings += amt;
+						}
+						else
+						{
+							std::cout << "Wire Cancelled\n";
+							btn = 0;
+						}
+					}
+					else
+					{
+						std::cout << "Insufficient Funds..\n";
+						btn = 0;
+					}
 				}
 			}
-			else
+			else if (btn == 2)
 			{
-				std::cout << "Insufficient Funds.." << std::endl;
+				double amt{ 0 }, fee{ 0 };
+				std::string cnf;
+
+				std::cout << "Enter Amount to Transfer from your Savings Account\n";
+				getInput(amt, valid);
+
+				if (valid)
+				{
+					fee = amt * transferfee;
+					if (amt + fee <= savings)
+					{
+						std::cout << "Please confirm\n";
+						std::cout << "Savings Account Transfer in the amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
+						std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
+						std::cout << amt - fee << " will be Transferred to your Savings Account\n";
+						std::cout << "Enter [Y] to continue or [N] to cancel\n";
+						getInput(cnf);
+
+						if (cnf == "Y" || cnf == "y")
+						{
+							savings -= amt + fee;
+							fees += fee;
+							checking += amt;
+						}
+						else
+						{
+							std::cout << "Wire Cancelled\n";
+							btn = 0;
+						}
+					}
+					else
+					{
+						std::cout << "Insufficient Funds..\n";
+						btn = 0;
+					}
+				}
+			}
+			else if (btn == 3)
+			{
+				btn = 25;
 			}
 		}
 	}
@@ -349,9 +427,9 @@
 	{
 		std::string wireName;
 		bool namefound = 0;
-		std::cout << "Enter the Account Name that you want to Wire to: " << std::endl;
-		std::cin >> wireName;
 
+		std::cout << "Enter the Account Name that you want to Wire to: \n";
+		getInput(wireName);
 
 		int TA;
 		{
@@ -365,52 +443,57 @@
 		int index2wire = 0;
 
 		std::ifstream read("./ObjectsData/ObjectsCollection.txt");
-		for (int l = 0; l < TA; l++)
+		while (TA--)
 		{
 			getline(read, loadName);
 
 			if (wireName == loadName && wireName != name)
 			{
 				double amt, fee;
+				bool valid{ 0 };
 				namefound = true;
 
-				std::cout << "Please Enter amount to Transfer: " << std::endl;
-				std::cin >> amt;
-				fee = amt * wireFee;
+				std::cout << "Please Enter amount to Transfer: \n";
+				getInput(amt, valid);
 
-				if (fee + amt <= checking)
+				if (valid)
 				{
-				jumpDeposit:
-					std::cout << "Please confirm your wire details: \nTransfer Amount: " << amt << "\nTransfer Fee: -$" << fee
-						<< "\n Account - " << wireName << " Will Receive: $" << amt - fee << "\n Confirm? (Y / N)\n";
-					std::string CNFW;
-					std::cin >> CNFW;
-					CNFW[0] = toupper(CNFW[0]);
+					fee = amt * wireFee;
+					if (fee + amt <= checking)
+					{
+						std::cout << "Please confirm your wire details: \nTransfer Amount: " << amt << "\nTransfer Fee: $" 
+								  << fee << "\nAccount: " << wireName << " Will Receive: $" << amt << 
+							   	  "\nYour Remaining Balance will be: " << checking - (fee + amt) << "\n Confirm? (Y / N)\n";
 
-					if (CNFW[0] == 'Y')
-					{
-						this->checking -= amt + fee;
-						BAVec[index2wire].checking += amt - fee;
-						fees += fee;
-						break;
-					}
-					else if (CNFW[0] == 'N')
-					{
-						std::cout << "Wire cancelled..Thank you..\n";
+						std::string CNFW;
+						getInput(CNFW);
+						CNFW[0] = toupper(CNFW[0]);
+
+						if (CNFW[0] == 'Y')
+						{
+							this->checking -= amt + fee;
+							BAVec[index2wire].checking += amt - fee;
+							fees += fee;
+							std::cout << "Wire Completed Successfully!\n"; 
+							break;
+						}
+						else if (CNFW[0] == 'N')
+						{
+							std::cout << "Wire cancelled..Thank you..\n";
+							break;
+						}
 					}
 					else
-						goto jumpDeposit;
-				}
-				else
-				{
-					std::cout << "Insufficient Funds...";
-					namefound = false;
-					break;
+					{
+						std::cout << "Insufficient Funds...\n";
+						namefound = false;
+						break;
+					}
 				}
 			}
-			else if (wireName == name)
+			else if (wireName == name && wireName == loadName)
 			{
-				std::cout << "You can't make a wire to your own account, please enter a different account" << std::endl;
+				std::cout << "You can't make a wire to your own account, please enter a different account\n";
 				break;
 			}
 			else

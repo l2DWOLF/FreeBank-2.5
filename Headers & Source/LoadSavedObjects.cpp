@@ -39,7 +39,7 @@ void LoadExistingAccounts(int& totalAccounts, std::vector<bankAccounts>& BAVec)
 	int TA = totalAccounts;
 
 	std::ifstream read("./ObjectsData/ObjectsCollection.txt", std::ios::app);
-	for (int l = 0; l < TA; l++)
+	while (TA--)
 	{
 		getline(read, loadName);
 

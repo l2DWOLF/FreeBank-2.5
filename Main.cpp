@@ -1,16 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <direct.h>
-#include <vector>
-#include "BankClass.h"
-#include "BankAccountsClass.h"
-#include "LoadSavedObjects.h"
-#include "AccountMenu.h"
-#include "MainMenu.h"
-
-
+#include <iostream>							
+#include <direct.h>							
+#include <vector>							
+#include "BankClass.h"		
+#include "BankAccountsClass.h"				
+#include "LoadSavedObjects.h"				
+#include "MainMenu.h"						
+									
 
 int main()
 {
