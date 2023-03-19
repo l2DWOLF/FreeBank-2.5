@@ -10,9 +10,10 @@
 #include "AccountMenu.h"
 #include "MainMenu.h"
 
+
+
 int main()
 {
-
 	//Create ObjectsData Directory// 
 	int hmm = _mkdir("./ObjectsData");
 
@@ -25,7 +26,7 @@ int main()
 	//Load & instantiate Existings Objects(accounts) from Saved File//
 	LoadExistingAccounts(totalAccounts, BAVec); 
 	
-	//Launch Program//
+	//Launch Program - MainMenu//
 	Launch(totalAccounts, transactionFees, BAVec, FreeBank);
 
 	return 0;

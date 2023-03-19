@@ -1,17 +1,17 @@
-#pragma once
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include "BankClass.h"
+//This CPP file Header// 
+#include "BankAccountsClass.h"
 
 
 
-class bankAccounts : protected Bank
-{
-private:
-	double checking{ 0 }, savings{ 0 }, investment{ 0 }, credit{ 0 }, fees{ 0 };
-	std::string name, password;
-
-public:
 
 	//constructor
-	bankAccounts(std::string newName)
+	bankAccounts::bankAccounts(std::string newName)
 	{
 		name = newName;
 		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
@@ -34,7 +34,7 @@ public:
 	}
 
 	//copy constructor for loading objects from objectsCollection file
-	bankAccounts(std::string& maname, std::string& mapass, std::string& machecking,
+	bankAccounts::bankAccounts(std::string& maname, std::string& mapass, std::string& machecking,
 		std::string& masavings, std::string& mainvestment, std::string& macredit)
 	{
 		double conchecking = std::stod(machecking);
@@ -50,12 +50,12 @@ public:
 		credit = concredit;
 	}
 
-	std::string namecheck()
+	std::string bankAccounts::namecheck()
 	{
 		return name;
 	}
 
-	bool passcheck()
+	bool bankAccounts::passcheck()
 	{
 		std::string tempass;
 		bool rslt{ 0 };
@@ -76,7 +76,7 @@ public:
 		return rslt; //return permission to rslt to main to continue login (accountmenu function).
 	}
 
-	void changePass()
+	void bankAccounts::changePass()
 	{
 		std::string tempass;
 
@@ -102,17 +102,17 @@ public:
 	}
 
 
-	double movefees() //return occured fees from session to accountmenu upon exit.
+	double bankAccounts::movefees() //return occured fees from session to accountmenu upon exit.
 	{
 		return fees;
 	}
 
-	void clearfees() //clear occured fees from current session.
+	void bankAccounts::clearfees() //clear occured fees from current session.
 	{
 		fees = 0;
 	}
 
-	void info() // print info
+	void bankAccounts::info() // print info
 	{
 		fees += 1;
 		checking -= 1;
@@ -127,7 +127,7 @@ public:
 		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 	}
 
-	void deposit() // Deposit
+	void bankAccounts::deposit() // Deposit
 	{
 		std::string btn;
 	jumpDeposit:
@@ -187,7 +187,7 @@ public:
 	}
 	// End Deposit //
 
-	void withdrawal() // Withdrawal
+	void bankAccounts::withdrawal() // Withdrawal
 	{
 		std::string btn;
 	jumpwith:
@@ -263,8 +263,7 @@ public:
 	}
 	// End Withdrawal //
 
-
-	void transfer() // Transfer
+	void bankAccounts::transfer() // Transfer
 	{
 
 		std::string btn;
@@ -345,13 +344,89 @@ public:
 	}
 	// End Transfer //
 
-	//Destructor ;) // 
-	~bankAccounts()
+	// Wire // 
+	void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 	{
+		std::string wireName;
+		bool namefound = 0;
+		std::cout << "Enter the Account Name that you want to Wire to: " << std::endl;
+		std::cin >> wireName;
+
+
+		int TA;
+		{
+			std::string loadTA;
+			std::ifstream read("./ObjectsData/totalAccounts.txt");
+			getline(read, loadTA);
+			TA = std::stoi(loadTA);
+		}
+
+		std::string loadName;
+		int index2wire = 0;
+
+		std::ifstream read("./ObjectsData/ObjectsCollection.txt");
+		for (int l = 0; l < TA; l++)
+		{
+			getline(read, loadName);
+
+			if (wireName == loadName && wireName != name)
+			{
+				double amt, fee;
+				namefound = true;
+
+				std::cout << "Please Enter amount to Transfer: " << std::endl;
+				std::cin >> amt;
+				fee = amt * wireFee;
+
+				if (fee + amt <= checking)
+				{
+				jumpDeposit:
+					std::cout << "Please confirm your wire details: \nTransfer Amount: " << amt << "\nTransfer Fee: -$" << fee
+						<< "\n Account - " << wireName << " Will Receive: $" << amt - fee << "\n Confirm? (Y / N)\n";
+					std::string CNFW;
+					std::cin >> CNFW;
+					CNFW[0] = toupper(CNFW[0]);
+
+					if (CNFW[0] == 'Y')
+					{
+						this->checking -= amt + fee;
+						BAVec[index2wire].checking += amt - fee;
+						fees += fee;
+						break;
+					}
+					else if (CNFW[0] == 'N')
+					{
+						std::cout << "Wire cancelled..Thank you..\n";
+					}
+					else
+						goto jumpDeposit;
+				}
+				else
+				{
+					std::cout << "Insufficient Funds...";
+					namefound = false;
+					break;
+				}
+			}
+			else if (wireName == name)
+			{
+				std::cout << "You can't make a wire to your own account, please enter a different account" << std::endl;
+				break;
+			}
+			else
+			{
+				index2wire++;
+			}
+		}
+	}
+	// End Wire // 
+
+	//Destructor ;) // 
+	bankAccounts::~bankAccounts()
+	{
+		//Save Object's Data// 
 		std::ofstream file;
 		file.open("./ObjectsData/" + name + " login" + ".txt");
 		file << std::setprecision(2) << std::fixed << name << "\n" << password << "\n" << checking << "\n" << savings << "\n" << investment << "\n" << credit;
 		file.close();
 	}
-
-};
