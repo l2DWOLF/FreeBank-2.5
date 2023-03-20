@@ -9,88 +9,71 @@
 #include "MainMenu.h"
 
 
-
 void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccounts>& BAVec, Bank& FreeBank)
 {
 	int menubtn{0};
 
 	while (menubtn != 25)
 	{
-		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		std::cout << "  Welcome to FreeBank! " << "\n";
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		std::cout << "Please select from the following options: \n";
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		std::cout << "[1] - Login to your Account\n";
-		std::cout << "[2] - Open a new bank account\n";
-		std::cout << "[3] - To View Bank Profit\n";
-		std::cout << "[4] - To Close\n";
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		getInput(menubtn);
+		PMainMenu(); 
+		MenuInt(menubtn);
 
-		//Login//
+		//1. Login//
 		if (menubtn == 1)
 		{
-			std::string nameinput;  //name from user
-			std::string namecollect; // name from objects
-			int actIndex{ 0 };  // index to correct obj name if found
+		std::string nameinput, namecollect;  //name from user, name from objects//
+		int actIndex{ 0 };  // index to correct obj name if found
 
-			std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-			std::cout << "Enter Username\n";
-			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-			getInput(nameinput);
+		Pborder("Enter Username");
+		getInput(nameinput);
 
-			for (int l = 0; l < totalAccounts; l++)
+		int TA = BAVec.size(); 
+		while (TA--)
+		{
+			namecollect = BAVec[TA].namecheck();				//get name from object to test against input name
+			if (nameinput == namecollect)					//test if input name == object name
 			{
-				namecollect = BAVec[l].namecheck();				//get name from object to test against input name
-				if (nameinput == namecollect)					//test if input name == object name
-				{
-					actIndex = l;								//assign index to found account
-					break;
-				}
+				actIndex = TA;								//assign index to found account
+				break;
 			}
+		}
+		if (nameinput == namecollect)
+		{
+		bool verify{ 0 };
+		verify = BAVec[actIndex].passcheck();		//run password check via object method
 
-			if (nameinput == namecollect)
+			if (verify == true)
 			{
-				bool verify{ 0 };
-				verify = BAVec[actIndex].passcheck();		//run password check via object method
-
-				if (verify == true)
-				{
-					std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-					std::cout << "Login Successful..! Welcome " << namecollect << "! \n";
-					std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-					transactionFees = accountmenu(BAVec[actIndex], BAVec);		//run account menu with existing object logged in
-					FreeBank.Fee(transactionFees);								//move occured fees to FreeBank Bank obj
-
-				}
-				else
-				{
-					std::cout << "Wrong Password..\n";
-					std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-				}
+				std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+				std::cout << "Login Successful..! Welcome " << namecollect << "! \n";
+				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+				transactionFees = accountmenu(BAVec[actIndex], BAVec);		//run account menu with existing object logged in
+				FreeBank.Fee(transactionFees);								//move occured fees to FreeBank Bank obj
 			}
 			else
 			{
-				std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-				std::cout << "Account doesn't exist..\n";
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+				Pborder("Wrong Password...");
 			}
-			menubtn = 0;
+		}
+		else
+		{
+			
+			Pborder("Account doesn't exist..!");
+			
+		}
+		menubtn = 0;
 		}
 
-		//Create New Account
+		//2. Create New Account//
 		else if (menubtn == 2)
 		{
-			std::string nameTest;
-			bool nameisfree = false;
+		std::string nameTest;
+		bool nameisfree = false;
 
-			std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-			std::cout << "Please Enter Account Name\n";
+		Pborder("Please Enter Account Name");
+		getInput(nameTest);
 
-			getInput(nameTest);
-			nameisfree = FreeBank.namecheckAll(nameTest);
-
+		nameisfree = FreeBank.namecheckAll(nameTest);
 			if (nameisfree == true)
 			{
 				BAVec.emplace_back(nameTest);		//Add new bank account object to accounts Vector
@@ -106,18 +89,16 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 				menubtn = 0;
 			}
 		}
-
-		//Check profit of FreeBank obj
+		//3. Check profit of FreeBank//
 		else if (menubtn == 3)
 		{
 			FreeBank.profit();
 			menubtn = 0;
 		}
-
-		//Exit
+		//4. Exit//
 		else if (menubtn == 4)
 		{
-			std::cout << "Thank you..!! Good Bye..!!\n";
+			std::cout << "Thank you for visiting FreeBank ~ Good Bye..!!\n";
 			menubtn = 25; 
 		}
 	}

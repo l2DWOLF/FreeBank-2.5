@@ -7,8 +7,6 @@
 #include "LoadSavedObjects.h"
 
 
-
-
 void saveTotalAccounts(int& totalAccounts)
 {
 	if (totalAccounts > 0)

@@ -47,6 +47,9 @@ public:
 	// Wire
 	void wire(std::vector<bankAccounts>& BAVec);
 
+	// Save Object's Data 
+	void SaveData();
+
 	// Destructor ;)
 	~bankAccounts();
 

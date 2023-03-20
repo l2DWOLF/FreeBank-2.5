@@ -8,8 +8,8 @@ private:
 	double income{ 0 };
 
 protected:
-	const double cdfee = 0.001, sdfee = 0.005, cwfee = 0.002, swfee = 0.010; // Fees (cd = checking deposit, cw = checking withdrwal)
-	const double transferfee = 0.001, invTfee = 0.002, wireFee = 0.0015;
+	const double cdfee = 0.005, sdfee = 0.010, cwfee = 0.015, swfee = 0.020; // Fees (cd = checking deposit, cw = checking withdrwal)
+	const double transferfee = 0.030, invTfee = 0.075, wireFee = 0.025;
 
 
 public:

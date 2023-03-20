@@ -14,9 +14,9 @@
 
 	void Bank::profit()
 	{
-		std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-		std::cout << "Bank's Profits: $" << std::fixed << std::setprecision(2) << income << "\n";
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "FreeBank's Profits: $" << std::fixed << std::setprecision(2) << income << "\n";
+	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 	}
 
 	bool Bank::namecheckAll(std::string nameTest)
