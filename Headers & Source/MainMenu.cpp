@@ -25,7 +25,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		int actIndex{ 0 };  // index to correct obj name if found
 
 		Pborder("Enter Username");
-		getInput(nameinput);
+		getInputUserName(nameinput);
 
 		int TA = BAVec.size(); 
 		while (TA--)
@@ -57,21 +57,18 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		}
 		else
 		{
-			
-			Pborder("Account doesn't exist..!");
-			
+			Pborder("Account doesn't exist..!");	
 		}
 		menubtn = 0;
 		}
-
 		//2. Create New Account//
 		else if (menubtn == 2)
 		{
 		std::string nameTest;
 		bool nameisfree = false;
 
-		Pborder("Please Enter Account Name");
-		getInput(nameTest);
+		Pborder("Please Enter Account Name ");
+		getInputUserName(nameTest);
 
 		nameisfree = FreeBank.namecheckAll(nameTest);
 			if (nameisfree == true)

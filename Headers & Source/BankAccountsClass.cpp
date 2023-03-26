@@ -17,7 +17,7 @@ bankAccounts::bankAccounts(std::string newName)
 	name = newName;
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 	std::cout << "Hello " << name << "! \nPlease enter a new password\n";
-	getInputPass(password);
+	getInputPass(password, name);
 	std::cout << "Your password is: " << password << std::endl;
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
@@ -88,7 +88,7 @@ void bankAccounts::changePass()
 	if (tempass == filepass)
 	{
 		std::cout << "Enter New Password: \n";
-		getInputPass(password);
+		getInputPass(password, name);
 		SaveData();
 	}
 	else
@@ -389,7 +389,7 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 	bool namefound = false;
 
 	Pborder("Enter the name of the Account that you want to Wire to: ");
-	getInput(wireName);
+	getInputUserName(wireName);
 
 	size_t TA = BAVec.size(); 
 	std::ifstream read("./ObjectsData/ObjectsCollection.txt");

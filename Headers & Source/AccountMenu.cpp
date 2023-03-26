@@ -31,7 +31,6 @@ double accountmenu(bankAccounts& act, std::vector<bankAccounts>& BAVec)
 		{
 			act.transfer();
 			actbtn = 0;
-
 		}
 		else if (actbtn == 4)
 		{
