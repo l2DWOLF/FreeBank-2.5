@@ -16,9 +16,14 @@ void getInputUserName(std::string& input);
 void MenuInt(int& input);
 
 // Menus Printing Items //
-void pconfirm(double amt, double fee, std::string acctype, std::string transtype); //Print confirm menu for acc transactions 
-void PMainMenu(); //Print Main Menu
-void PAccountMenu(); //Print Account Menu
-void Pborder(std::string message); //Print a message inside border
+void pconfirm(double amt, double fee, std::string acctype, std::string transtype); //Print confirm menu for acc transactions.
+void PMainMenu(); //Print Main Menu.
+void PAccountMenu(); //Print Account Menu.
+void Pborder(std::string message); //Print a message inside border.
 void UNRules(); //Print UserName Entry Rules.
 void PWRules(); //Print PassWord Entry Rules.
+void nameExists(std::string& nameTest); //Print Name Exists Message.
+
+//Additional Tools//
+void checkCin(); //Check Extraction// 
+void clearCin(); //Clear Cin//

@@ -22,12 +22,12 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		if (menubtn == 1)
 		{
 		std::string nameinput, namecollect;  //name from user, name from objects//
-		int actIndex{ 0 };  // index to correct obj name if found
+		size_t actIndex{ 0 };  // index to correct obj name if found
 
-		Pborder("Enter Username");
+		Pborder("Enter your Username");
 		getInputUserName(nameinput);
 
-		int TA = BAVec.size(); 
+		size_t TA = BAVec.size(); 
 		while (TA--)
 		{
 			namecollect = BAVec[TA].namecheck();				//get name from object to test against input name
@@ -45,7 +45,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 			if (verify == true)
 			{
 				std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-				std::cout << "Login Successful..! Welcome " << namecollect << "! \n";
+				std::cout << "Login Successful..!\nWelcome " << namecollect << "! \n";
 				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 				transactionFees = accountmenu(BAVec[actIndex], BAVec);		//run account menu with existing object logged in
 				FreeBank.Fee(transactionFees);								//move occured fees to FreeBank Bank obj
@@ -57,7 +57,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		}
 		else
 		{
-			Pborder("Account doesn't exist..!");	
+			Pborder("Account Doesn't Exist..!");	
 		}
 		menubtn = 0;
 		}
@@ -67,7 +67,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		std::string nameTest;
 		bool nameisfree = false;
 
-		Pborder("Please Enter Account Name ");
+		Pborder("Please Enter New Account Name:");
 		getInputUserName(nameTest);
 
 		nameisfree = FreeBank.namecheckAll(nameTest);
@@ -80,9 +80,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 			}
 			else
 			{
-				std::cout << "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-				std::cout << "An Account with the name: " << nameTest << " Already exists, please enter a different name\n";
-				std::cout << "\nName Suggestions: \n" << nameTest << "123\n" << nameTest << "2023\n" << nameTest << "LastName\n";
+				nameExists(nameTest);
 				menubtn = 0;
 			}
 		}
@@ -95,7 +93,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		//4. Exit//
 		else if (menubtn == 4)
 		{
-			std::cout << "Thank you for visiting FreeBank ~ Good Bye..!!\n";
+			std::cout << "Thank you for visiting FreeBank ~ \n Enjoy your Day..! :)\n";
 			menubtn = 25; 
 		}
 	}

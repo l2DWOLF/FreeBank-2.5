@@ -16,9 +16,9 @@ bankAccounts::bankAccounts(std::string newName)
 {
 	name = newName;
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "Hello " << name << "! \nPlease enter a new password\n";
+	std::cout << "Hello! " << name << "! \nPlease Enter a New Password:\n";
 	getInputPass(password, name);
-	std::cout << "Your password is: " << password << std::endl;
+	std::cout << "Your Password is: " << password << std::endl;
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 
 	//Create Object file with name + pass//
@@ -48,16 +48,16 @@ bankAccounts::bankAccounts(std::string& maname, std::string& mapass, std::string
 	credit = concredit;
 }
 
-std::string bankAccounts::namecheck()
+std::string bankAccounts::namecheck() const
 {
 	return name;
 }
 
-bool bankAccounts::passcheck()
+bool bankAccounts::passcheck() const
 {
 	std::string tempass;
 	bool rslt{ 0 };
-	Pborder("enter password: ");
+	Pborder("Enter Password: ");
 	getInputPass(tempass);
 
 	std::string filepass;
@@ -96,7 +96,7 @@ void bankAccounts::changePass()
 }
 
 
-double bankAccounts::movefees()
+double bankAccounts::movefees() const
 {
 	return fees;
 }
@@ -108,17 +108,17 @@ void bankAccounts::clearfees()
 
 void bankAccounts::info()
 {
-	fees += 1;
-	checking -= 1;
-	std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "  Bank Account: " << name << "\n";
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "Checking Account: $" << std::fixed << std::setprecision(2) << checking << std::endl;
-	std::cout << "Savings Account: $" << std::fixed << std::setprecision(2) << savings << std::endl;
-	std::cout << "Investment Account: $" << std::fixed << std::setprecision(2) << investment << std::endl;
-	std::cout << "Credit Card: $" << std::fixed << std::setprecision(2) << credit << std::endl;
-	std::cout << "Fees Total: $" << std::fixed << std::setprecision(2) << fees << std::endl;
-	std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << "\n";
+	fees++;
+	checking--;
+	std::cout << "\n \n \n---------------------------\n";
+	std::cout << "  Bank Account: [" << name << "]\n";
+	std::cout << "---------------------------\n";
+	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Checking Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< checking << std::endl;
+	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Savings Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< savings << std::endl;
+	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Investment Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< investment << std::endl;
+	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Credit Card Balance:" << std::fixed << std::setprecision(2) <<"$"<< credit << std::endl;
+	std::cout << "\n\nTotal Fees Occured in Current Banking Session: $" << std::fixed << std::setprecision(2) << fees << std::endl;
+	std::cout << "---------------------------\n";
 SaveData();
 }
 
@@ -128,7 +128,7 @@ void bankAccounts::deposit()
 	std::string transtype = "Deposit"; 
 	int btn{ 0 };
 	while (btn != 25)
-{		
+	try{		
 		std::cout << "[1] - Deposit to Checking Account\n";
 		std::cout << "[2] - Deposit to Savings Account\n";
 		std::cout << "[3] - Return to Previous Menu\n";
@@ -142,7 +142,9 @@ void bankAccounts::deposit()
 			std::string acctype = "Checking";
 
 			Pborder("Enter Amount to Deposit to your Checking Account");
-			getInput(amt);
+		
+				getInput(amt);
+
 			fee = amt * cdfee;
 			pconfirm(amt, fee, acctype, transtype);
 			getInput(cnf);
@@ -192,6 +194,10 @@ void bankAccounts::deposit()
 		{
 			btn = 25;
 		}
+	  }
+	catch (const char* e)
+	{
+		std::cout << "Exception: " << e << std::endl;
 	}
 SaveData();
 }	
@@ -203,7 +209,7 @@ void bankAccounts::withdrawal()
 	int btn{ 0 };
 	std::string transtype = "Withdrawal";
 	while (btn != 25)
-	{
+	try{
 		std::cout << "[1] - Withdrawal from Checking Account\n";
 		std::cout << "[2] - withdrawal from Savings Account\n";
 		std::cout << "[3] - Return to Previous Menu\n";
@@ -283,7 +289,11 @@ void bankAccounts::withdrawal()
 		{
 			btn = 25;
 		}
-	}
+	   }
+	   catch (const char* e)
+	   {
+		   std::cout << "Exception: " << e << std::endl;
+	   }
 SaveData();
 }
 // End Withdrawal //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
@@ -294,7 +304,7 @@ void bankAccounts::transfer()
 	std::string transtype = "Transfer";
 	int btn{0};
 	while (btn != 25)
-	{
+	try{
 		std::cout << "Select Tranfer type:\n";
 		std::cout << "[1] - Checking to Savings\n";
 		std::cout << "[2] - Savings to Checking\n";
@@ -376,7 +386,11 @@ void bankAccounts::transfer()
 		{
 			btn = 25;
 		}
-	}
+	  }
+	  catch (const char* e)
+	  {
+		  std::cout << "Exception: " << e << std::endl;
+      }
 SaveData();
 }
 // End Transfer //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
@@ -394,11 +408,11 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 	size_t TA = BAVec.size(); 
 	std::ifstream read("./ObjectsData/ObjectsCollection.txt");
 	while (TA--)
-	{
+	try{
 		getline(read, loadName);
 		if (wireName == name && wireName == loadName)
 		{
-			std::cout << "You can't make a wire to your own account, please enter a different account\n";
+			std::cout << "You can't make a wire to your own account :) \n please enter a different account name!\n";
 			break;
 		}
 		else if (wireName == loadName)
@@ -412,7 +426,7 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 			fee = amt * wireFee;
 			if (fee + amt <= checking)
 			{
-			std::cout << "Please confirm your wire details: \nTransfer Amount: " << amt << "\nTransfer Fee: $" << fee << "\nAccount: " << 
+			std::cout << "Please confirm your wire details: \nTransfer Amount: $" << amt << "\nTransfer Fee: $" << fee << "\nAccount: " << 
 			wireName << " Will Receive: $" << amt << "\nYour Remaining Balance will be: $" << std::setprecision(2) << std::fixed << checking - (fee + amt) << "\n Confirm? (Y / N)\n";
 
 			std::string CNFW;
@@ -429,7 +443,7 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 				}
 				else
 				{
-				std::cout << "Wire cancelled..Thank you..\n";
+				std::cout << "Wire Cancelled..\n";
 				break;
 				}
 			}
@@ -443,7 +457,11 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 		{
 		index2wire++;
 		}
-	}
+	  }
+	  catch (const char* e)
+	  {
+		  std::cout << "Exception: " << e << std::endl;
+	  }
 	if (namefound == false && wireName != name)
 	{
 	std::cout << "We couldn't find the account you entered, please try again..\n";

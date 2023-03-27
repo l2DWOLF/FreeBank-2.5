@@ -18,16 +18,16 @@ public:
 		std::string& masavings, std::string& mainvestment, std::string& macredit);
 
 	//Return Name
-	std::string namecheck();
+	std::string namecheck() const;
 
 	//Password Check
-	bool passcheck();
+	bool passcheck() const;
 
 	//Change Password
 	void changePass();
 
 	//Move Fees -> return occured fees from session to accountmenu upon exit.
-	double movefees();
+	double movefees() const;
 	
 	//Clear Fees
 	void clearfees();
