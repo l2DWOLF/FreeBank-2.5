@@ -89,7 +89,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		//4. Exit//
 		else if (menubtn == 4)
 		{
-			std::cout << "Thank you for visiting FreeBank ~ \n Enjoy your Day..! :)\n";
+			std::cout << "Thank you for visiting FreeBank ~ \nEnjoy your Day..! :)\n";
 			menubtn = 25; 
 		}
 	}

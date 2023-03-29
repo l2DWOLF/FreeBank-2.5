@@ -92,6 +92,41 @@ void getInput(double& input) throw (...)
 	}
 }
 
+//MenuBtn int Reduction to 2 digits only// 
+void MenuInt(int& input)
+{
+	std::string testinput{};
+	int numsct{ 0 };
+	bool valid = false;
+
+	while (valid == false)
+	{
+		std::cin >> testinput;
+		clearCin();
+		for (size_t l = 0; l < testinput.size(); l++)
+		{
+			if (testinput[l] < '9' && testinput[l] > '0')
+			{
+				numsct++;
+			}
+		}
+		if ((numsct) == (testinput.size()) && testinput.size() <= 25)
+		{
+			std::string a;
+			a += testinput[0];
+			a += testinput[1];
+			input = stoi(a);
+			valid = true;
+			break;
+		}
+		else
+		{
+			std::cout << "Invalid Input, Try Again \n";
+		}
+		numsct = 0;
+	}
+}
+
 // UserName Validation // 
 void getInputUserName(std::string& input)
 {
@@ -267,41 +302,6 @@ void getInputPass(std::string& input, const std::string name)
 		} 
 	numsct = 0; symbolsct = 0; namect = 0; upperct = 0; namecheck = false; 
 	}
-}
-
-//MenuBtn int Reduction to 2 digits only// 
-void MenuInt(int& input)
-{
-		std::string testinput{};
-		int numsct{ 0 };
-		bool valid = false;
-
-		while (valid == false)
-		{
-			std::cin >> testinput;
-			clearCin();
-			for (size_t l = 0; l < testinput.size(); l++)
-			{
-				if (testinput[l] < '9' && testinput[l] > '0')
-				{
-					numsct++;
-				}
-			}
-			if ((numsct) == (testinput.size()) && testinput.size() <= 25)
-			{
-				std::string a; 
-				a += testinput[0];
-				a += testinput[1];
-				input = stoi(a);
-				valid = true;
-				break;
-			}
-			else
-			{
-				std::cout << "Invalid Input, Try Again \n";
-			}
-			numsct = 0;
-		}
 }
 
 //Print Confirmation for BankAccountsClass Transactions//
