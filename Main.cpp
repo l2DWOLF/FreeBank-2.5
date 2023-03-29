@@ -12,7 +12,7 @@ int main()
 	//Create ObjectsData Directory// 
 	int hmm = _mkdir("./ObjectsData");
 
-	//Essential Variables 
+	//Essential Variables//
 	Bank FreeBank;
 	int totalAccounts = 0;
 	double transactionFees{};

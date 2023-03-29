@@ -18,7 +18,7 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		PMainMenu(); 
 		MenuInt(menubtn);
 
-		//1. Login//
+		//1. Login to an Existing Account//
 		if (menubtn == 1)
 		{
 		std::string nameinput, namecollect;  //name from user, name from objects//
@@ -41,19 +41,16 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 		{
 		bool verify{ 0 };
 		verify = BAVec[actIndex].passcheck();		//run password check via object method
-
 			if (verify == true)
 			{
-				std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-				std::cout << "Login Successful..!\nWelcome " << namecollect << "! \n";
-				std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+				std::cout << "\n \n \n-------------------------------------\n";
+				std::cout << "Login Successful..! :)\nWelcome " << namecollect << "! \n";
+				std::cout << "-------------------------------------\n";
 				transactionFees = accountmenu(BAVec[actIndex], BAVec);		//run account menu with existing object logged in
 				FreeBank.Fee(transactionFees);								//move occured fees to FreeBank Bank obj
 			}
 			else
-			{
 				Pborder("Wrong Password...");
-			}
 		}
 		else
 		{
@@ -69,7 +66,6 @@ void Launch(int& totalAccounts, double& transactionFees, std::vector<bankAccount
 
 		Pborder("Please Enter New Account Name:");
 		getInputUserName(nameTest);
-
 		nameisfree = FreeBank.namecheckAll(nameTest);
 			if (nameisfree == true)
 			{

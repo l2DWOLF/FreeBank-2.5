@@ -11,15 +11,17 @@
 
 
 
-// constructor //
+// Constructor //
 bankAccounts::bankAccounts(std::string newName)
 {
 	name = newName;
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "Hello! " << name << "! \nPlease Enter a New Password:\n";
+	std::cout << "\n\n--------------------------------------\n";
+	std::cout << "Hello! " << name << "!  :)\nPlease Enter a New Password:\n";
+	std::cout << "--------------------------------------\n";
 	getInputPass(password, name);
-	std::cout << "Your Password is: " << password << std::endl;
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "\n\n\n--------------------------------------\n";
+	std::cout << name << ", Your Password is: " << password << std::endl;
+	std::cout << "--------------------------------------\n";
 
 	//Create Object file with name + pass//
 	SaveData();
@@ -31,7 +33,7 @@ bankAccounts::bankAccounts(std::string newName)
 	Cfile.close();
 }
 
-//copy constructor for loading objects from objectsCollection file //
+// Copy Constructor for loading objects from objectsCollection file //
 bankAccounts::bankAccounts(std::string& maname, std::string& mapass, std::string& machecking,
 	std::string& masavings, std::string& mainvestment, std::string& macredit)
 {
@@ -95,7 +97,6 @@ void bankAccounts::changePass()
 		std::cout << "Wrong Password..\n";
 }
 
-
 double bankAccounts::movefees() const
 {
 	return fees;
@@ -110,15 +111,15 @@ void bankAccounts::info()
 {
 	fees++;
 	checking--;
-	std::cout << "\n \n \n---------------------------\n";
-	std::cout << "  Bank Account: [" << name << "]\n";
-	std::cout << "---------------------------\n";
+	std::cout << "\n \n \n--------------------------------\n";
+	std::cout << "    Bank Account: [" << name << "]\n";
+	std::cout << "--------------------------------\n";
 	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Checking Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< checking << std::endl;
 	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Savings Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< savings << std::endl;
 	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Investment Account Balance:" << std::fixed << std::setprecision(2) <<"$"<< investment << std::endl;
 	std::cout << std::left << std::setfill(' ') << std::setw(30) << "Credit Card Balance:" << std::fixed << std::setprecision(2) <<"$"<< credit << std::endl;
 	std::cout << "\n\nTotal Fees Occured in Current Banking Session: $" << std::fixed << std::setprecision(2) << fees << std::endl;
-	std::cout << "---------------------------\n";
+	std::cout << "--------------------------------\n";
 SaveData();
 }
 
@@ -129,65 +130,37 @@ void bankAccounts::deposit()
 	int btn{ 0 };
 	while (btn != 25)
 	try{		
-		std::cout << "[1] - Deposit to Checking Account\n";
-		std::cout << "[2] - Deposit to Savings Account\n";
-		std::cout << "[3] - Return to Previous Menu\n";
+		PDMenu();
 		MenuInt(btn);
-
-		//1. Deposit to Checking//
-		if (btn == 1)
+		// Deposit //
+		if (btn == 1 || btn == 2)
 		{
-			double amt{ 0 }, fee{ 0 };
+			double amt{ 0 }, fee{ 0 }, feetype{ 0 };
 			std::string cnf;
-			std::string acctype = "Checking";
-
-			Pborder("Enter Amount to Deposit to your Checking Account");
-		
-				getInput(amt);
-
-			fee = amt * cdfee;
+			std::string acctype;
+			//Checking or Savings?//
+			if (btn == 1)
+			{acctype = "Checking"; feetype = cdfee;}
+			else if (btn == 2)
+			{acctype = "Savings"; feetype = sdfee;}
+			//Get Amount & Confirm Transaction//
+			Pborder("Enter Amount to Deposit to your " + acctype + " Account");
+			getInput(amt);
+			fee = amt * feetype;
 			pconfirm(amt, fee, acctype, transtype);
 			getInput(cnf);
-
 			if (cnf[0] == 'Y' || cnf[0] == 'y')
 			{
 				amt -= fee;
 				fees += fee;
-				checking += amt;
+				if (acctype == "Checking")
+					checking += amt;
+				else if (acctype == "Savings")
+					savings += amt; 
 				std::cout << "Deposit Completed Successfully!\n"; 
 			}
 			else
-			{
-				std::cout << "Deposit Cancelled\n";
-				btn = 1;
-			}		
-		}
-		//2. Deposit to Savings//
-		else if (btn == 2)
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::string acctype = "Savings";
-
-			Pborder("Enter Amount to Deposit to your Savings Account");
-			getInput(amt);
-
-			fee = amt * sdfee;
-			pconfirm(amt, fee, acctype, transtype);
-			getInput(cnf);
-
-			if (cnf[0] == 'Y' || cnf[0] == 'y')
-			{
-			amt -= fee;
-			fees += fee;
-			savings += amt;
-			std::cout << "Deposit Completed Successfully!\n";
-			}
-			else
-			{
-			std::cout << "Deposit Cancelled\n";
-			btn = 1;
-			}
+				std::cout << "Deposit Cancelled\n";	
 		}
 		//3. Return to Previous Menu//
 		else if (btn == 3)
@@ -200,8 +173,7 @@ void bankAccounts::deposit()
 		std::cout << "Exception: " << e << std::endl;
 	}
 SaveData();
-}	
-// End Deposit //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
+}	// End Deposit //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
 
 // Withdrawal // 
 void bankAccounts::withdrawal() 
@@ -209,94 +181,54 @@ void bankAccounts::withdrawal()
 	int btn{ 0 };
 	std::string transtype = "Withdrawal";
 	while (btn != 25)
-	try{
-		std::cout << "[1] - Withdrawal from Checking Account\n";
-		std::cout << "[2] - withdrawal from Savings Account\n";
-		std::cout << "[3] - Return to Previous Menu\n";
+	try {
+		PWMenu();
 		MenuInt(btn);
-
-		//1. Checking Withdrawal //
-		if (btn == 1)
+		// Withdrawal //
+		if (btn == 1 || btn == 2)
 		{
-			double amt{ 0 }, fee{ 0 };
+			double amt{ 0 }, fee{ 0 }, feetype{ 0 };
 			std::string cnf;
-			std::string acctype = "Checking";
-
-			Pborder("Enter Amount to withdrawal from your Checking Account");
+			std::string acctype;
+			//Checking or Savings?//
+			if (btn == 1)
+			{acctype = "Checking"; feetype = cwfee;}
+			else if (btn == 2)
+			{acctype = "Savings"; feetype = swfee;}
+			//Get amount, confirm funds & Transac.//
+			Pborder("Enter Amount to withdrawal from your " + acctype + " Account");
 			getInput(amt);
-				
-			fee = amt * cwfee;
-			if (fee + amt <= checking)
+			fee = amt * feetype;
+			if ((acctype == "Checking" && fee+amt <= checking) || (acctype == "Savings" && fee+amt <= savings))
 			{
-			pconfirm(amt, fee, acctype, transtype);
-			getInput(cnf);
+				pconfirm(amt, fee, acctype, transtype);
+				getInput(cnf);
 				if (cnf == "Y" || cnf == "y")
 				{
-				amt += fee;
-				fees += fee;
-				checking -= amt;
-				std::cout << "Withdrawal Completed Successfully\n";
+					amt += fee;
+					fees += fee;
+					if (acctype == "Checking")
+						checking -= amt;
+					else if (acctype == "Savings")
+						savings -= amt; 
+					std::cout << "Withdrawal Completed Successfully!\n";
 				}
 				else
-				{
-				std::cout << "Withdrawal Cancelled\n"; 
-				btn = 0;
-				}
+					std::cout << "Withdrawal Cancelled\n";
 			}
 			else
-			{
-			std::cout << "Insufficient Funds..\n";
-			btn = 0;
-			}
+				std::cout << "Insufficient Funds..\n";
 		}
-		// 2. Savings Withdrawal // 
-		else if (btn == 2)
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string cnf;
-			std::string acctype = "Savings";
-
-			Pborder("Enter Amount to withdrawal from your Savings Account\n");
-			getInput(amt);
-
-			fee = amt * cwfee;
-			if (fee + amt <= savings)
-			{
-			pconfirm(amt, fee, acctype, transtype);
-			getInput(cnf);
-
-				if (cnf == "Y" || cnf == "y")
-				{
-				amt += fee;
-				fees += fee;
-				savings -= amt;
-				std::cout << "Withdrawal Completed Successfully\n";
-				}
-				else
-				{
-				std::cout << "Withdrawal Cancelled\n";
-				btn = 0;
-				}
-			}
-			else
-			{
-			std::cout << "Insufficient Funds..\n";
-			btn = 0;
-			}
-		}
-		// Return to Previous Menu //
-		else if (btn ==  3)
-		{
+		// 3. Return to Previous Menu //
+		else if (btn == 3)
 			btn = 25;
 		}
-	   }
-	   catch (const char* e)
-	   {
-		   std::cout << "Exception: " << e << std::endl;
-	   }
+		catch (const char* e)
+		{
+		std::cout << "Exception: " << e << std::endl;
+		}
 SaveData();
-}
-// End Withdrawal //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
+}	// End Withdrawal //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
 
 // Transfer // 
 void bankAccounts::transfer()
@@ -305,87 +237,45 @@ void bankAccounts::transfer()
 	int btn{0};
 	while (btn != 25)
 	try{
-		std::cout << "Select Tranfer type:\n";
-		std::cout << "[1] - Checking to Savings\n";
-		std::cout << "[2] - Savings to Checking\n";
-		std::cout << "[3] - Return to Previous Menu\n"; 
+		PTMenu();
 		MenuInt(btn);
-
-		// 1. Checking -> Savings //
-		if (btn == 1)
+		// Transfer //
+		if (btn == 1 || btn == 2)
 		{
 			double amt{ 0 }, fee{ 0 };
-			std::string acctype = "Checking";
+			std::string acctype;
 			std::string cnf;
-
-			Pborder("Enter Amount to Transfer from your Checking Account");
+			//Checking or Savings?//
+			if (btn == 1)
+				acctype = "Checking";
+			else if (btn == 2)
+				acctype = "Savings"; 
+			//Get Amount, Confirm Funds & Transaction//
+			Pborder("Enter Amount to Transfer from your " + acctype + " Account");
 			getInput(amt);
-
 			fee = amt * transferfee;
-			if (amt + fee <= checking)
+			if ((acctype == "Checking" && fee + amt <= checking) || (acctype == "Savings" && fee + amt <= savings))
 			{
 			pconfirm(amt, fee, acctype, transtype);
 			getInput(cnf);
-
-				if (cnf == "Y" || cnf == "y")
+				if (cnf[0] == 'Y' || cnf[0] == 'y')
 				{
-				checking -= amt + fee;
 				fees += fee;
-				savings += amt;
-				std::cout << "Transfer Completed Successfully\n"; 
+					if (acctype == "Checking")
+					{checking -= amt + fee; savings += amt;}
+					else if (acctype == "Savings")
+					{savings -= amt + fee; checking += amt;}
+				std::cout << "Transfer Completed Successfully!\n"; 
 				}
 				else
-				{
-				std::cout << "Transfer Cancelled\n";
-				btn = 0;
-				}
+					std::cout << "Transfer Cancelled\n";
 			}
 			else
-			{
-			std::cout << "Insufficient Funds..\n";
-			btn = 0;
-			}
-		}
-		// 2. Savings -> Checking //
-		else if (btn == 2)
-		{
-			double amt{ 0 }, fee{ 0 };
-			std::string acctype = "Savings";
-			std::string cnf;
-
-			Pborder("Enter Amount to Transfer from your Savings Account");
-			getInput(amt);
-
-			fee = amt * transferfee;
-			if (amt + fee <= savings)
-			{
-				pconfirm(amt, fee, acctype, transtype);
-				getInput(cnf);
-
-				if (cnf == "Y" || cnf == "y")
-				{
-				savings -= amt + fee;
-				fees += fee;
-				checking += amt;
-				std::cout << "Transfer Completed Successfully\n";
-				}
-				else
-				{
-				std::cout << "Transfer Cancelled\n";
-				btn = 0;
-				}
-			}
-			else
-			{
 				std::cout << "Insufficient Funds..\n";
-				btn = 0;
-			}
 		}
-		// Return to Previous Menu // 
+		// 3. Return to Previous Menu // 
 		else if (btn == 3)
-		{
 			btn = 25;
-		}
 	  }
 	  catch (const char* e)
 	  {
@@ -420,13 +310,13 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 			double amt, fee;
 			namefound = true;
 
-			Pborder("Please Enter amount to Transfer: ");
+			Pborder("Please Enter the Amount to Transfer: ");
 			getInput(amt);
 
 			fee = amt * wireFee;
 			if (fee + amt <= checking)
 			{
-			std::cout << "Please confirm your wire details: \nTransfer Amount: $" << amt << "\nTransfer Fee: $" << fee << "\nAccount: " << 
+			std::cout << "Please Confirm your Wire Details: \nTransfer Amount: $" << amt << "\nTransfer Fee: $" << fee << "\nAccount: " << 
 			wireName << " Will Receive: $" << amt << "\nYour Remaining Balance will be: $" << std::setprecision(2) << std::fixed << checking - (fee + amt) << "\n Confirm? (Y / N)\n";
 
 			std::string CNFW;
@@ -442,16 +332,10 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 				break;
 				}
 				else
-				{
-				std::cout << "Wire Cancelled..\n";
-				break;
-				}
+				{std::cout << "Wire Cancelled..\n"; break;}
 			}
 			else
-			{
-			std::cout << "Insufficient Funds...\n";
-			break;
-			}
+			{std::cout << "Insufficient Funds...\n"; break;}
 		}
 		else
 		{
@@ -467,8 +351,7 @@ void bankAccounts::wire(std::vector<bankAccounts>& BAVec)
 	std::cout << "We couldn't find the account you entered, please try again..\n";
 	}
 SaveData();
-}
-// End Wire //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
+}	// End Wire //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ || 
 
 // Save Object's Data //
 void bankAccounts::SaveData()
@@ -478,7 +361,6 @@ void bankAccounts::SaveData()
 	file << std::setprecision(2) << std::fixed << name << "\n" << password << "\n" << checking << "\n" << savings << "\n" << investment << "\n" << credit;
 	file.close();
 }
-
 //Destructor ;) // 
 bankAccounts::~bankAccounts()
 {

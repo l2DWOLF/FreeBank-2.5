@@ -102,11 +102,12 @@ void getInputUserName(std::string& input)
 
 	while (!(valid))
 	{
-		clearCin();
 		UNRules();
 		getInput(test);
+		size_t Tsize{ 0 };
+		Tsize = test.size();
 		//Run Tests Loop// 
-		for (int l = 0; l < test.size(); l++)
+		for (int l = 0; l < Tsize; l++)
 		{
 			//check for symbols//
 			for (int l1 = 0; l1 < 8; l1++)
@@ -119,9 +120,9 @@ void getInputUserName(std::string& input)
 				numsct++;
 		}
 		// Conclusion // 
-		if (test.size() > 25 || test.size() < 4 || test[0] == ' ' || symbolsct < 1 || numsct < 2)
-		{
-			std::cout << "Invalid Input! \n"; 
+		if ( Tsize > 25 || Tsize < 4 || test[0] == ' ' || symbolsct < 1 || numsct < 2)
+		{ 
+			PPErrors(Tsize, symbolsct, numsct);
 			valid = false;
 		}
 		else
@@ -129,8 +130,7 @@ void getInputUserName(std::string& input)
 			input = test;
 			valid = true;
 		}
-		numsct = 0;
-		symbolsct = 0;
+		numsct = 0; symbolsct = 0;
 	}
 }
 
@@ -140,31 +140,35 @@ void getInputPass(std::string& input)
 	std::string test{};
 	bool valid = false;
 	int symbolsct{ 0 }, numsct{ 0 }, upperct{ 0 };
+
 	char symbols[8] = {'!', '@', '#', '$', '%' , '^' , '&', '*'};
 
 	while (!(valid))
 	{	
 		PWRules();
 		getInput(test); 
+		size_t Tsize{ 0 };
+		Tsize = test.size();
 		//Run Tests Loop//
-		for (int l = 0; l < test.size(); l++)
+		for (int l = 0; l < Tsize; l++)
 		{
-		//check for UpperCase//
+		//Check for UpperCase//
 			if (test[l] >= 'A' && test[l] <= 'Z')
 				upperct++;
-		//check for symbols// 
+		//Check for Symbols// 
 			for (int l1 = 0; l1 < 8; l1++)
 			{
 				if (test[l] == symbols[l1])
 					symbolsct++;
 			}
-		//check for digits// 
+		//Check for Digits// 
 			if (test[l] >= '0' && test[l] <= '9')
 				numsct++;
 		}
 		// Conclusion //
-		if (test.size() > 25 || test.size() < 4 || test[0] == ' ' || symbolsct < 2 || numsct < 2 || upperct < 1)
-		{
+		if (Tsize > 25 || Tsize < 4 || test[0] == ' ' || symbolsct < 2 || numsct < 2 || upperct < 1)
+		{	
+			PPErrors(Tsize, symbolsct, numsct, upperct, 0);
 			valid = false; 
 		}
 		else
@@ -172,77 +176,96 @@ void getInputPass(std::string& input)
 		input = test; 
 		valid = true; 
 		}
-		numsct = 0; 
-		symbolsct = 0; 
-		upperct = 0;
+		numsct = 0; symbolsct = 0; upperct = 0;
 	}
 }
 // input validation for New Passwords - Override [1] //
 void getInputPass(std::string& input, const std::string name)
 {
 	std::string test{};
-	bool valid = false;
+	bool valid = false, namecheck = false; 
 	int symbolsct{ 0 }, numsct{ 0 }, namect{ 0 }, upperct{ 0 };
 	char symbols[8] = { '!', '@', '#', '$', '%' , '^' , '&', '*' };
 
 	while (!(valid))
 	{	
 		PWRules();
-		size_t Tsize{ 0 };
+		size_t Tsize{ 0 }, Nsize{0};
 		getInput(test);
 		Tsize = test.size();
+		Nsize = name.size();
 		
 		//Run Tests Loop//
 		for (int l = 0; l < Tsize; l++)
 		{
-			//check for UpperCase//
+			//Check for UpperCase//
 			if (test[l] >= 'A' && test[l] <= 'Z')
 				upperct++;
+			//Check for Digits// 
+			if (test[l] >= '0' && test[l] <= '9')
+				numsct++;
 			//check for symbols// 
 			for (int l1 = 0; l1 < 8; l1++)
 			{
 				if (test[l] == symbols[l1])
 					symbolsct++;
 			}
-			//check for digits// 
-			if (test[l] >= '0' && test[l] <= '9')
-				numsct++;
-			//check for UserName//
-			for (int l7 = 0; l7 < 1; l7++)
+			//Check for UserName//
+			if (namecheck == false)
 			{
-				int l = 0, l1 = 1, l2 = 2, l3 = 3, i = 0, i1 = 1, i2 = 2, i3 = 3;
-				size_t loopsize{ 0 };
-				IFSIze(loopsize, Tsize);
-				for (int ll = 0; ll <= loopsize; ll++)
+				size_t loopsize{ 0 }, CharIT{ 0 }, ITSize{ 0 }, txts{ 0 };
+				//Check if Pass is < || > User//
+				if (Tsize >= Nsize)
 				{
-					std::string test4pass;
-					test4pass += test[l]; test4pass += test[l1]; test4pass += test[l2]; test4pass += test[l3];
-					std::string test4name;
-					test4name += name[i]; test4name += name[i1]; test4name += name[i2]; test4name += name[i3];
-					if (test4pass == test4name)
-					{
-						namect++;
-					}
-					l++; l1++; l2++; l3++;
+					txts = Nsize;
+					ITSize = Nsize;
+					loopsize = (Tsize - Nsize) + 2;
 				}
+				else if (Tsize < Nsize)
+				{
+					txts = Tsize;
+					ITSize = Tsize;
+					loopsize = Nsize - Tsize;
+					loopsize++;
+				}
+				for (int l = 0; l < loopsize; l++)
+				{	
+					std::string test4pass;
+					for (int t = 0; t < txts; t++)
+					{
+						if (Tsize >= Nsize)
+							test4pass += test[CharIT];
+						else if (Tsize < Nsize)
+							test4pass += name[CharIT];
+						CharIT++;
+					}
+					CharIT -= ITSize - 1;
+					if (Tsize >= Nsize)
+					{
+						if (test4pass == name)
+							namect++;
+					}
+					else if (Tsize < Nsize)
+					{
+						if (test4pass == test)
+							namect++;
+					}
+				}
+				namecheck = true; 
 			}
 		}
 		//Conclusion//
 		if (Tsize > 25 || Tsize < 4 || test[0] == ' ' || symbolsct < 2 || numsct < 2 || namect > 0 || upperct < 1)
 		{
-			std::cout << "Invalid Password!\n"; 
+			PPErrors(Tsize, symbolsct, numsct, upperct, namect);
 			valid = false;
-			numsct = 0; symbolsct = 0; namect = 0;
 		}
 		else
 		{
 			input = test;
 			valid = true;
-		}
-	numsct = 0;
-	symbolsct = 0;
-	namect = 0;
-	upperct = 0; 
+		} 
+	numsct = 0; symbolsct = 0; namect = 0; upperct = 0; namecheck = false; 
 	}
 }
 
@@ -256,7 +279,7 @@ void MenuInt(int& input)
 		while (valid == false)
 		{
 			std::cin >> testinput;
-			checkCin();
+			clearCin();
 			for (size_t l = 0; l < testinput.size(); l++)
 			{
 				if (testinput[l] < '9' && testinput[l] > '0')
@@ -264,7 +287,7 @@ void MenuInt(int& input)
 					numsct++;
 				}
 			}
-			if ((numsct) == (testinput.size()))
+			if ((numsct) == (testinput.size()) && testinput.size() <= 25)
 			{
 				std::string a; 
 				a += testinput[0];
@@ -284,76 +307,155 @@ void MenuInt(int& input)
 //Print Confirmation for BankAccountsClass Transactions//
 void pconfirm(double amt, double fee, std::string acctype, std::string transtype)
 {
-	std::cout << "Please Confirm\n";
+	std::cout << "\n-------------------------\n";
+	std::cout << "Please Confirm: \n";
+	std::cout << "-------------------------\n";
 	std::cout << acctype << " Account " <<transtype<< " in the Amount of: $" << std::fixed << std::setprecision(2) << amt << std::endl;
 	std::cout << "Total Fee: $" << std::fixed << std::setprecision(2) << fee << std::endl;
 	std::cout << "Enter [Y] to Continue || Enter [N] to Cancel\n";
+	std::cout << "-------------------------\n";
 }
 //Print MainMenu Menu//
 void PMainMenu()
 {
-	std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "     || FreeBank - 2.5 ||     " << "\n";
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "\n \n \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "	     || FreeBank - 2.5 ||     " << "\n";
+	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 	std::cout << "Please Select From the Following Options: \n";
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 	std::cout << "[1] - Login to Your Account\n";
 	std::cout << "[2] - Open a New bank Account\n";
 	std::cout << "[3] - To View Bank Profit\n";
 	std::cout << "[4] - To Close the Program\n";
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
 }
 //Print AccountMenu Menu//
 void PAccountMenu()
 {
-std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-std::cout << "Please Select From the Following Options\n";
-std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-std::cout << "[1] - To Make a Deposit\n";
-std::cout << "[2] - To Make a Withdrawal\n";
-std::cout << "[3] - To Make a Transfer\n";
-std::cout << "[4] - To View your Balance ($1 Fee)\n";
-std::cout << "[5] - To Change your Password\n";
-std::cout << "[6] - To Make a Wire\n";
-std::cout << "[25] - To Logout and return to the Main Menu\n";
-std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "\n==========================================\n";
+	std::cout << "	    [Account Menu]\n";
+	std::cout << "==========================================\n"; 
+	std::cout << "Please Select From the Following Options : \n";
+	std::cout << "==========================================\n";
+	std::cout << "[1] - To Make a Deposit\n";
+	std::cout << "[2] - To Make a Withdrawal\n";
+	std::cout << "[3] - To Make a Transfer\n";
+	std::cout << "[4] - To View your Balance ($1 Fee)\n";
+	std::cout << "[5] - To Change your Password\n";
+	std::cout << "[6] - To Make a Wire\n";
+	std::cout << "[25] - To Logout and return to the Main Menu\n";
+	std::cout << "==========================================\n";
+}
+
+//Print Acc. Deposit Menu//
+void PDMenu()
+{
+	std::cout << "\n-------------------------\n";
+	std::cout << "Select Deposit Type:\n";
+	std::cout << "-------------------------\n";
+	std::cout << "[1] - Deposit to Checking Account\n";
+	std::cout << "[2] - Deposit to Savings Account\n";
+	std::cout << "[3] - Return to Previous Menu\n";
+	std::cout << "-------------------------\n";
+}
+//Print Acc. Withdrawal Menu//
+void PWMenu()
+{
+	std::cout << "\n-------------------------\n";
+	std::cout << "Select Withdrawl Type:\n";
+	std::cout << "-------------------------\n";
+	std::cout << "[1] - Withdrawal from Checking Account\n";
+	std::cout << "[2] - Withdrawal from Savings Account\n";
+	std::cout << "[3] - Return to Previous Menu\n";
+	std::cout << "-------------------------\n";
+}
+//Print Acc. Transfer Menu//
+void PTMenu()
+{
+	std::cout << "\n-------------------------\n";
+	std::cout << "Select Tranfer type:\n";
+	std::cout << "-------------------------\n";
+	std::cout << "[1] - Checking to Savings\n";
+	std::cout << "[2] - Savings to Checking\n";
+	std::cout << "[3] - Return to Previous Menu\n";
+	std::cout << "-------------------------\n";
 }
 // Print UserName Entry Rules // 
 void UNRules()
 {
-	std::cout << "\n-------------------------\n";
+	std::cout << "\n--------------------------------------\n";
 	std::cout << "Username Restrictions: ";
-	std::cout << "\n-------------------------\n";
+	std::cout << "\n--------------------------------------\n";
 	std::cout << "-UserName Must Contain Between 4 - 25 Characters. [1b3$].\n";
 	std::cout << "-UserName Must Contain at least 2 Digits. [123#].\n";
 	std::cout << "-UserName Must Contain at least 1 Special Charactar:    | !, @, #, $, %, ^, &, * | [a23!]\n";
 	std::cout << "-UserName Nay NOT begin with a Space Character.[ user].\n";
+	std::cout << "--------------------------------------\n";
 }
 // Print PassWord Entry Rules // 
 void PWRules()
 {
-	std::cout << "\n-------------------------\n";
+	std::cout << "\n--------------------------------------\n";
 	std::cout << "Password Restrictions: ";
-	std::cout << "\n-------------------------\n";
+	std::cout << "\n--------------------------------------\n";
 	std::cout << "-Password Must Contain Between 4 - 25 Characters. [ABCD] \n";
-	std::cout << "-Password Must Contain at least 2 Digits [dude12!@].\n";
-	std::cout << "-Password Must Contain at least 1 Upper Case Letter [Dude12!@].\n";
-	std::cout << "-Password Must Contain at least 2 Special Charactars:    | !, @, #, $, %, ^, &, * |\n";
-	std::cout << "-Password May NOT Contain the First 4 Characters of your UserName [UserName: Dude123!@, Password: 123!@Dude] \n";
+	std::cout << "-Password Must Contain at least 1 Upper Case Letter. [Dude12!@].\n";
+	std::cout << "-Password Must Contain at least 2 Digits. [dude12!@].\n";
+	std::cout << "-Password Must Contain at least 2 Symbol Charactars.    | !, @, #, $, %, ^, &, * |\n";
+	std::cout << "-Password May NOT Containt your UserName.  [UserName: Dude123!@, Password: 123!@Dude] \n";
 	std::cout << "-Password May NOT begin with a Space Character [ Dude123!@#].\n";
+	std::cout << "--------------------------------------\n";
 }
+// Print UserName Entry Errors - Base [0] // 
+void PPErrors(size_t Tsize, int symbolsct, int numsct)
+{
+	std::cout << "\n--------------------------------\n";
+	std::cout << "Invalid Username! ";
+	std::cout << "\n--------------------------------\n";
+	if (Tsize > 25 || Tsize < 4)
+		std::cout << "-You've Entered Less than 4 or More than 25 Charactars!" << std::endl;
+	if (numsct < 2)
+		std::cout << "-You've Entered Less than 2 Number Digits!" << std::endl;
+	if (symbolsct < 2)
+		std::cout << "-You've Entered Less than 1 Symbols!" << std::endl;
+	std::cout << "\n--------------------------------\n";
+}
+// Print Password Entry Errors - Override [1] // 
+void PPErrors(size_t Tsize, int symbolsct, int numsct, int upperct, int namect)
+{
+	std::cout << "\n--------------------------------\n";
+	std::cout << "Invalid Password! ";
+	std::cout << "\n--------------------------------\n";
+	if (Tsize > 25 || Tsize < 4)
+		std::cout << "-You've Entered Less than 4 or More than 25 Charactars!" << std::endl;
+	if (upperct < 1)
+		std::cout << "-You've Entered Less than 1 Upper Case Letter!" << std::endl;
+	if (numsct < 2)
+		std::cout << "-You've Entered Less than 2 Number Digits!" << std::endl;
+	if (symbolsct < 2)
+		std::cout << "-You've Entered Less than 2 Symbols!" << std::endl;
+	if (namect > 0)
+		std::cout << "-Your Password Containts your Username!" << std::endl;
+	std::cout << "\n--------------------------------\n";
+}
+// Print Name Exists//
 void nameExists(std::string& nameTest)
 {
-	std::cout << "\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
-	std::cout << "An Account with the name: " << nameTest << " Already exists, please enter a different name\n";
-	std::cout << "\nName Suggestions: \n" << nameTest << "123\n" << nameTest << "2023\n" << nameTest << "LastName\n";
+	std::cout << "\n\n--------------------------------------------------\n";
+	std::cout << "An Account with the Name: " << nameTest << " Already exists!\n";
+	std::cout << "--------------------------------------------------\n";
+	std::cout << "\n-Please Enter a Different Name!\n\nName Suggestions: \n";
+	std::cout << "-------------------------\n";
+	std::cout << nameTest << "123\n" << nameTest << "2023\n" << nameTest << "LastName\n";
+	std::cout << "-------------------------\n";
+	std::cout << "\n--------------------------------------------------\n";
 }
 // Print Border Lines // 
 void Pborder(std::string message)
 {
-	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "\n==========================================\n";
 	std::cout << message << std::endl;
-	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	std::cout << "==========================================\n";
 }
 
 // Check CIN // 

@@ -19,39 +19,19 @@ double accountmenu(bankAccounts& act, std::vector<bankAccounts>& BAVec)
 		MenuInt(actbtn);
 
 		if (actbtn == 1)
-		{
-			act.deposit();
-			actbtn = 0;
-		}
+						act.deposit();
 		else if (actbtn == 2)
-		{
-			act.withdrawal();
-			actbtn = 0;
-		}
+						act.withdrawal();
 		else if (actbtn == 3)
-		{
-			act.transfer();
-			actbtn = 0;
-		}
+						act.transfer();
 		else if (actbtn == 4)
-		{
-			act.info();
-			actbtn = 0;
-		}
+						act.info();
 		else if (actbtn == 5)
-		{
-			act.changePass();
-			actbtn = 0;
-		}
+						act.changePass();
 		else if (actbtn == 6)
-		{
-			act.wire(BAVec);
-			actbtn = 0;
-		}
+						act.wire(BAVec);
 		else if (actbtn == 25)
-		{
 			std::cout << "Good Bye " << act.namecheck() << "! :)\n";
-		}
 	}
 	double dfee = act.movefees(); //return total fees from transaction to main
 	act.clearfees(); //clear occured fees from current session
